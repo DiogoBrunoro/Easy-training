@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Carregar logotipo
     const logo = document.querySelector('.logo');
     if (logo) {
-      logo.src = '../assets/images/logoimg/Logo.png';
+      logo.src = '../codigo/assets/images/logoimg/Logo.png';
     }
   
     // Carregar imagens do carrossel
     const carouselImages = [
-      '../assets/images/carrosselimg/carrossel1.png',
-      '../assets/images/carrosselimg/carrossel2.png',
-      '../assets/images/carrosselimg/carrossel3.png'
+      '../codigo/assets/images/carrosselimg/carrossel1.png',
+      '../codigo/assets/images/carrosselimg/carrossel2.png',
+      '../codigo/assets/images/carrosselimg/carrossel3.png'
     ];
   
     document.querySelectorAll('.carousel-item img').forEach((img, index) => {
@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
   
     // Carregar imagens dos cards recomendados
     const recommendedCardImages = [
-      '../assets/images/cardimg/card1.png',
-      '../assets/images/cardimg/card2.png',
-      '../assets/images/cardimg/card3.png'
+      '../codigo/assets/images/cardimg/card1.png',
+      '../codigo/assets/images/cardimg/card2.png',
+      '../codigo/assets/images/cardimg/card3.png'
     ];
   
     document.querySelectorAll('.fichas .card img').forEach((img, index) => {

@@ -1,4 +1,3 @@
-
 // Página inicial de Login
 const LOGIN_URL = "login.html";
 
@@ -6,7 +5,9 @@ const LOGIN_URL = "login.html";
 var db_usuarios = {};
 
 // Objeto para o usuário corrente
-var usuarioCorrente = {};
+var usuarioCorrente = {
+    treino: []
+};
 
 // Função para gerar códigos randômicos a serem utilizados como código de usuário
 // Fonte: https://stackoverflow.com/questions/105034/how-to-create-guid-uuid
@@ -29,8 +30,8 @@ function generateUUID() { // Public Domain/MIT
 // Dados de usuários para serem utilizados como carga inicial
 const dadosIniciais = {
     usuarios: [
-        { "id": generateUUID(), "login": "admin", "senha": "123", "nome": "Administrador do Sistema", "email": "admin@abc.com" },
-        { "id": generateUUID(), "login": "user", "senha": "123", "nome": "Usuario Comum", "email": "user@abc.com" },
+        { "id": generateUUID(), "login": "admin", "senha": "123", "nome": "Administrador do Sistema", "email": "admin@abc.com", "treino": [] },
+        { "id": generateUUID(), "login": "user", "senha": "123", "nome": "Usuario Comum", "email": "user@abc.com", "treino": [] },
     ]
 };
 
@@ -65,47 +66,38 @@ function initLoginApp() {
 
 // Verifica se o login do usuário está ok e, se positivo, direciona para a página inicial
 function loginUser(login, senha) {
-    // Verifica todos os itens do banco de dados de usuarios 
-    // para localizar o usuário informado no formulario de login
     for (var i = 0; i < db_usuarios.usuarios.length; i++) {
         var usuario = db_usuarios.usuarios[i];
 
-        // Se encontrou login, carrega usuário corrente e salva no Session Storage
         if (login == usuario.login && senha == usuario.senha) {
             usuarioCorrente.id = usuario.id;
             usuarioCorrente.login = usuario.login;
             usuarioCorrente.email = usuario.email;
             usuarioCorrente.nome = usuario.nome;
-            usuarioCorrente.senha = usuario.senha; // Certifique-se de que a senha está sendo atribuída corretamente
+            usuarioCorrente.senha = usuario.senha;
+            usuarioCorrente.treino = usuario.treino || []; // Certifique-se de que a variável treino é inicializada
 
-            // Salva os dados do usuário corrente no Session Storage, mas antes converte para string
             sessionStorage.setItem('usuarioCorrente', JSON.stringify(usuarioCorrente));
 
-            // Retorna true para usuário encontrado
             return true;
         }
     }
-
-    // Se chegou até aqui é porque não encontrou o usuário e retorna falso
     return false;
 }
 
 // Apaga os dados do usuário corrente no sessionStorage
 function logoutUser() {
-    usuarioCorrente = {};
+    usuarioCorrente = { treino: [] };
     sessionStorage.setItem('usuarioCorrente', JSON.stringify(usuarioCorrente));
-    window.location = "/index.html";
+    window.location = "/codigo/index.html";
 }
 
 function addUser(nome, login, senha, email) {
-    // Cria um objeto de usuario para o novo usuario 
     let newId = generateUUID();
-    let usuario = { "id": newId, "login": login, "senha": senha, "nome": nome, "email": email };
+    let usuario = { "id": newId, "login": login, "senha": senha, "nome": nome, "email": email, "treino": [] };
 
-    // Inclui o novo usuario no banco de dados baseado em JSON
     db_usuarios.usuarios.push(usuario);
 
-    // Salva o novo banco de dados com o novo usuário no localStorage
     localStorage.setItem('db_usuarios', JSON.stringify(db_usuarios));
 }
 
@@ -279,4 +271,111 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
     document.getElementById('btn_salvar_edicao').addEventListener('click', salvarEdicaoUsuario);
+});
+
+
+// Função para salvar uma nova ficha de treino
+function salvarFicha() {
+    if (usuarioCorrente && resultadoFichaTreino) {
+        // Verifica se o usuário já tem a ficha salva
+        if (usuarioCorrente.treino.some(item => item.id === resultadoFichaTreino.id)) {
+            alert("Esta ficha já foi salva pelo usuário.");
+            return;
+        }
+
+        // Cria um novo objeto para a ficha a ser adicionada
+        const novaFicha = {
+            id: resultadoFichaTreino.id,
+            descricao: resultadoFichaTreino.descricao
+        };
+
+        // Adiciona a nova ficha ao array de treinos do usuário corrente
+        usuarioCorrente.treino.push(novaFicha);
+
+        // Atualiza o objeto db_usuarios com os dados atualizados do usuário corrente
+        db_usuarios.usuarios.forEach(user => {
+            if (user.id === usuarioCorrente.id) {
+                user.treino.push(novaFicha);
+            }
+        });
+
+        // Salva o banco de dados atualizado no localStorage
+        localStorage.setItem('db_usuarios', JSON.stringify(db_usuarios));
+
+        // Atualiza o sessionStorage com o usuário corrente atualizado
+        sessionStorage.setItem('usuarioCorrente', JSON.stringify(usuarioCorrente));
+
+        // Confirmação de que a ficha foi salva
+        alert("Ficha salva com sucesso!");
+
+        // Renderiza novamente as fichas
+        renderizarFichas();
+    } else {
+        alert("Não foi possível salvar a ficha.");
+    }
+}
+
+// Função para excluir uma ficha de treino pelo índice
+function excluirFicha(index) {
+    if (usuarioCorrente && usuarioCorrente.treino.length > index) {
+        // Remove a ficha do array de treinos do usuário corrente
+        usuarioCorrente.treino.splice(index, 1);
+
+        // Atualiza o objeto db_usuarios com os dados atualizados do usuário corrente
+        db_usuarios.usuarios.forEach(user => {
+            if (user.id === usuarioCorrente.id) {
+                user.treino = usuarioCorrente.treino; // Atualiza o array de treinos no db_usuarios
+            }
+        });
+
+        // Salva o banco de dados atualizado no localStorage
+        localStorage.setItem('db_usuarios', JSON.stringify(db_usuarios));
+
+        // Atualiza o sessionStorage com o usuário corrente atualizado
+        sessionStorage.setItem('usuarioCorrente', JSON.stringify(usuarioCorrente));
+
+        // Renderiza novamente as fichas após a exclusão
+        renderizarFichas();
+    }
+}
+
+// Função para renderizar as fichas na interface
+function renderizarFichas() {
+    const mostrarFichasDiv = document.querySelector('.mostrarFichas1');
+    mostrarFichasDiv.innerHTML = ''; // Limpa o conteúdo existente
+
+    if (usuarioCorrente && usuarioCorrente.treino.length > 0) {
+        usuarioCorrente.treino.forEach((ficha, index) => {
+            const fichaDiv = document.createElement('div');
+            fichaDiv.classList.add('ficha');
+            fichaDiv.innerHTML = `
+            <div class="aparecerFicha" style="margin-bottom: 10px;">
+                    <p class="">${ficha.descricao || 'Sem descrição disponível'}</p>
+                    <div class="">
+                    <button class="btn btn-danger" onclick="excluirFicha(${index})">Excluir</button>
+                    <button class="btn btn-primary " onclick="abrirCronometro()">
+                    <i class="fa fa-clock-o"></i> Cronômetro
+                    </div>
+                    </div>
+            `;
+            mostrarFichasDiv.appendChild(fichaDiv);
+        });
+    } else {
+        mostrarFichasDiv.innerHTML = '<div class="nenhumaFicha">Nenhuma ficha salva.</div>';
+    }
+}
+
+
+// Função para atualizar os botões de exclusão após renderizar as fichas
+function atualizarBotoesExclusao() {
+    // Associa o evento de clique aos novos botões de exclusão
+    const botoesExcluir = document.querySelectorAll('.btn.btn-danger');
+    botoesExcluir.forEach((btn, index) => {
+        btn.addEventListener('click', () => excluirFicha(index));
+    });
+}
+
+// Inicializa a renderização das fichas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    renderizarFichas();
 });
