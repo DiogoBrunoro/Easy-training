@@ -89,7 +89,7 @@ function loginUser(login, senha) {
 function logoutUser() {
     usuarioCorrente = { treino: [] };
     sessionStorage.setItem('usuarioCorrente', JSON.stringify(usuarioCorrente));
-    window.location = "/codigo/index.html";
+    window.location = "/index.html";
 }
 
 function addUser(nome, login, senha, email) {
