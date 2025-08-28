@@ -1,39 +1,22 @@
-# Código Fonte
+# Easy Training
 
-Mantenha neste diretório todo o código fonte do projeto.
+Easy Training é um Software inovador que promete transformar a experiência dos treinos dos usuários, oferecendo fichas personalizadas adaptadas às necessidades e objetivos individuais. Além disso, a aplicação conta com o apoio e orientação de personal trainers e profissionais de educação física, dos quais os alunos podem receber instruções detalhadas e esclarecer dúvidas. Eles também podem utilizar e avaliar fichas publicadas pelos próprios instrutores dentro da plataforma. É a forma ideal de obter treinos personalizados, bem orientados e eficientes para alcançar seus objetivos.
 
-Se necessário, descreva neste arquivo aspectos relevantes da estrutura de diretórios criada para organização do código.
+## Alunos integrantes da equipe
 
-Uma sugestão da estrutura de diretórios para o projeto é a seguinte:
+* João Marcelo carvalho pereira araujo
+* Gabriel Oliveira Amorim
+* Diogo Caribe Brunoro
+* Bruno Kenji Fantucci Sato
+* Bernardo de Resende Marcelino
 
-```plaintext
-codigo/  (essa pasta aqui)
-│
-├── index.html
-│
-├── assets/
-│   ├── css/
-│   │   ├── styles.css
-│   │   └── (outros arquivos .css)
-│   │
-│   ├── js/
-│   │   ├── main.js
-│   │   └── (outros arquivos .js)
-│   │
-│   ├── images/
-│   │   ├── logo.png
-│   │   └── (outras imagens)
-│   │
-│   └── fonts/
-│       ├── font1.ttf
-│       └── (outras fontes)
-│
-├── pages/
-│   ├── about.html
-│   ├── contact.html
-│   └── (outras páginas)
-│
-└── README.md
-```
+## Professores responsáveis
 
-Utilize a pasta pages para manter um arquivo para cada pessoa por artefato (sprints 2 e 3) e, com isso, isolar as alterações de cada pessoa, facilitando o trabalho de gestão do código.
+* Michelle Hanne Soares de Andrade 
+* João Paulo Carneiro Aramuni
+
+## Instruções de utilização
+
+Não é necessário instalar nenhuma dependência para executar a aplicação apenas acessar o link do site https://easy-training-diogobrunoros-projects.vercel.app/
+
+
